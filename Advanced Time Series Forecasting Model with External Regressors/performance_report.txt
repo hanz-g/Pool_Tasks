@@ -1,0 +1,41 @@
+Time Series Forecasting Performance Report
+==========================================
+
+Dataset: statsmodels macrodata, public U.S. quarterly macroeconomic data
+Source: https://www.statsmodels.org/stable/datasets/generated/macrodata.html
+Target: realgdp, modeled on the log scale and converted back for reporting
+External regressors: unemp, realint, infl plus one-quarter lags
+
+Preprocessing:
+- Coerced modeling columns to numeric dtype.
+- Reindexed to a complete quarterly timeline.
+- Filled missing values with linear interpolation plus forward/backward fill.
+- Capped numeric outliers using 1.5*IQR winsorization.
+
+Model:
+- Selected SARIMAX order: (1, 1, 0)
+- Selected seasonal order: (0, 0, 0, 0)
+- Selected training AIC: -1,262.492
+- Model parameters were refined with a compact SARIMAX grid search.
+- Future external regressors were projected with recent 8-quarter drift and bounded by historical 5th/95th percentiles.
+
+Train/Test Split:
+- Training period: 1959-06-30 to 2003-09-30 (178 quarters)
+- Test period: 2003-12-31 to 2009-09-30 (24 quarters)
+
+Evaluation Metrics on Held-Out Test Set:
+- RMSE: 614.033
+- MAE: 546.931
+- MAPE: 4.194%
+
+Future Forecast:
+- Forecast period: 2009-12-31 to 2011-09-30 (8 quarters)
+- Plot file: forecasting_plot.png
+
+Top Grid Search Results:
+    order seasonal_order          aic
+(1, 1, 0)   (0, 0, 0, 0) -1262.492280
+(0, 1, 1)   (0, 0, 0, 0) -1254.193312
+(1, 1, 1)   (0, 0, 0, 0) -1252.215785
+(2, 1, 1)   (0, 0, 0, 0) -1250.636516
+(0, 1, 1)   (1, 0, 0, 4) -1240.697291
